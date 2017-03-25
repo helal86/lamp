@@ -82,7 +82,7 @@ curl --silent https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
 echo -e "\n--- Installing javascript components ---\n"
-npm install -g gulp bower >> /vagrant/vm_build.log 2>&1
+npm install -g gulp bower
 
 echo "all done"
 exit
