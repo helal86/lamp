@@ -84,7 +84,7 @@ mv composer.phar /usr/local/bin/composer
 echo -e "\n--- Installing javascript components ---\n"
 npm install -g gulp bower
 
-echo "all done"
+echo "all done :)"
 exit
 
 
