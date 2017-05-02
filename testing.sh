@@ -21,6 +21,14 @@ echo "done"
 echo -e "\n--- Restarting Apache ---\n"
 service apache2 restart
 
+echo "<?php
+
+// Show all information, defaults to INFO_ALL
+phpinfo();
+
+?>" >> /var/www/html/index.php
+
+
 echo "all done"
 exit
 
