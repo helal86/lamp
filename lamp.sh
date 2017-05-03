@@ -27,8 +27,8 @@ echo "done"
 
 # MySQL setup for development purposes ONLY
 echo -e "\n--- Install MySQL specific packages and settings ---\n"
-#debconf-set-selections <<< "mysql-server mysql-server/root_password password $DBPASSWD"
-#debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DBPASSWD"
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $DBPASSWD"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DBPASSWD"
 apt-get -y install mysql-server php5-mysql
 echo "done"
 
