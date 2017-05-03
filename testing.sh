@@ -28,6 +28,8 @@ phpinfo();
 
 ?>" >> /var/www/html/index.php
 
+mv /var/www/html/index.html /var/www/html/index1.html
+
 
 echo "all done"
 exit
