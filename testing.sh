@@ -1,42 +1,50 @@
 #!/bin/bash
 
-# Variables
-DBHOST=localhost
-DBNAME=dbname
-DBUSER=dbuser
-DBPASSWD=test123
-SITE=name
+# Update the packages.
+apt-get update
+apt-get -y upgrade
 
-echo -e "\n--- Updating packages list ---\n"
-apt-get -qq update
+# Install a few utility tools.
+apt-get install -y tar wget git
 
-echo -e "\n--- Install base packages ---\n"
-apt-get -y install curl git unzip htop
-echo "done"
+# Add repositories
+add-apt-repository -y ppa:openjdk-r/ppa
 
-echo -e "\n--- Install Apache ---\n"
-apt-get -y install apache2
-echo "done"
+apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
+DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+CODENAME=$(lsb_release -cs)
 
-echo -e "\n--- Installing PHP-specific packages ---\n"
-apt-get -y install php5 libapache2-mod-php5 php5-curl php5-gd php5-mysql memcached php5-memcached php5-mcrypt
+echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" | 
+  sudo tee /etc/apt/sources.list.d/mesosphere.list
 
-echo -e "\n--- Restarting Apache ---\n"
-service apache2 restart
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-echo "<?php
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
 
-// Show all information, defaults to INFO_ALL
-phpinfo();
-
-?>" >> /var/www/html/index.php
-
-mv /var/www/html/index.html /var/www/html/index1.html
+# Final apt-get update before installing packages
+apt-get update
 
 
-echo "all done"
-exit
+# Install JDK
+apt-get -y install openjdk-8-jdk-headless
 
+# Install autotools (Only necessary if building from git repository).
+apt-get -y install autoconf libtool
 
+# Install other Mesos dependencies.
+apt-get -y install apt-transport-https ca-certificates curl build-essential python-dev python-virtualenv libcurl4-nss-dev libsasl2-dev libsasl2-modules maven libapr1-dev libsvn-dev htop python-pip=1.5.4-1ubuntu4 maven=3.0.5-1 ntp docker-ce libwww-perl libdatetime-perl unzip monit=1:5.6-2  software-properties-common
+
+# Install packages
+sudo apt-get -y install mesos marathon 
+
+# Install python pip packages
+pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
+
+# install mesos config files
+
+ curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-03-01" | grep ipaddress
 
 
