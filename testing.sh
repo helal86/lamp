@@ -43,6 +43,11 @@ sudo apt-get -y install mesos marathon
 # Install python pip packages
 pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
 
+sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+wget -c https://apache.bintray.com/aurora/ubuntu-trusty/aurora-scheduler_0.17.0_amd64.deb
+sudo dpkg -i aurora-scheduler_0.17.0_amd64.deb
+
+
 # install mesos config files
 
  curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-03-01" | grep ipaddress
@@ -112,6 +117,7 @@ echo "2" > /etc/mesos-master/quorum
 cp /etc/mesos-master/ip /etc/mesos-master/hostname
 mkdir -p /etc/marathon/conf
 cp /etc/mesos-master/hostname /etc/marathon/conf
+cp /etc/mesos-master/ip /etc/marathon/conf
 cp /etc/mesos/zk /etc/marathon/conf/master
 cp /etc/marathon/conf/master /etc/marathon/conf/zk
 
@@ -125,3 +131,10 @@ echo manual | sudo tee /etc/init/mesos-slave.override
 sudo restart zookeeper
 sudo start mesos-master
 sudo start marathon
+
+#setup aurora
+
+sudo stop aurora-scheduler
+sudo -u aurora mkdir -p /var/lib/aurora/scheduler/db
+sudo -u aurora mesos-log initialize --path=/var/lib/aurora/scheduler/db
+sudo start aurora-scheduler
