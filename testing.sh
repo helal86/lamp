@@ -46,4 +46,66 @@ sudo apt-get -y install mesos marathon
 
  curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-03-01" | grep ipaddress
 
+## mesos config
 
+sleep 45
+
+#get ip address
+
+master1ip="$(getent hosts master1 | awk '{ print $1 }')"
+master2ip="$(getent hosts master2 | awk '{ print $1 }')"
+master3ip="$(getent hosts master3 | awk '{ print $1 }')"
+
+echo $master1ip
+echo $master2ip
+echo $master3ip
+
+
+echo "zk://"$master1ip":2181,"$master2ip":2181,"$master3ip":2181/mesos" > /mnt/zk
+cp /mnt/zk /etc/mesos/
+
+#check hostname
+vmname="$(getent hosts master1 | awk '{ print $2 }')"
+
+if [[ $vmname ==  *"master1"* ]]; then
+        echo "1" > /mnt/myid;
+        echo $master1ip | sudo tee /mnt/ip
+elif [[ $vmname ==  *"master2"* ]]; then
+        echo "2" > /mnt/myid;
+        echo $master2ip | sudo tee /mnt/ip
+else 	echo "3" > /mnt/myid;
+		echo $master3ip | sudo tee /mnt/ip
+fi
+
+cp /mnt/myid /etc/zookeeper/conf/
+cp /mnt/ip /etc/mesos-master/
+
+cp /etc/zookeeper/conf/zoo.cfg /mnt/zoo.cfg
+
+#add to zoo.cfg
+echo "server.1="$master1ip":2888:3888
+server.2="$master2ip":2888:3888
+server.3="$master3ip":2888:3888" >> /mnt/zoo.cfg
+
+cp /mnt/zoo.cfg /etc/zookeeper/conf/
+
+#add quorum
+echo "2" > /etc/mesos-master/quorum
+
+#mesos config files
+cp /etc/mesos-master/ip /etc/mesos-master/hostname
+mkdir -p /etc/marathon/conf
+cp /etc/mesos-master/hostname /etc/marathon/conf
+cp /etc/mesos/zk /etc/marathon/conf/master
+cp /etc/marathon/conf/master /etc/marathon/conf/zk
+
+#add marathon addresses
+echo "zk://"$master1ip":2181,"$master2ip":2181,"$master3ip":2181/marathon" > /mnt/zk
+cp /mnt/zk /etc/marathon/conf/
+
+stop mesos-slave
+echo manual | sudo tee /etc/init/mesos-slave.override
+
+sudo restart zookeeper
+sudo start mesos-master
+sudo start marathon
