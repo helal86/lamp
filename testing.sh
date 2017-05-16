@@ -27,7 +27,6 @@ add-apt-repository \
 # Final apt-get update before installing packages
 apt-get update
 
-
 # Install JDK
 apt-get -y install openjdk-8-jdk-headless
 
@@ -41,7 +40,7 @@ apt-get -y install apt-transport-https ca-certificates curl build-essential pyth
 sudo apt-get -y install mesos marathon 
 
 # Install python pip packages
-pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
+#pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
 
 # install mesos config files
 
