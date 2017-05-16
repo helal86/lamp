@@ -27,6 +27,7 @@ add-apt-repository \
 # Final apt-get update before installing packages
 apt-get update
 
+
 # Install JDK
 apt-get -y install openjdk-8-jdk-headless
 
@@ -40,13 +41,12 @@ apt-get -y install apt-transport-https ca-certificates curl build-essential pyth
 sudo apt-get -y install mesos marathon 
 
 # Install python pip packages
-#pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
+pip install urllib3 boto3 pyopenssl ndg-httpsclient pyasn1 
 
 # install mesos config files
 
  curl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-03-01" | grep ipaddress
 
-## mesos config
 
 sleep 45
 
@@ -56,16 +56,32 @@ master1ip="$(getent hosts master1 | awk '{ print $1 }')"
 master2ip="$(getent hosts master2 | awk '{ print $1 }')"
 master3ip="$(getent hosts master3 | awk '{ print $1 }')"
 
+vmip="$(ifconfig | grep -A 1 'eth0' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1)"
+
 echo $master1ip
 echo $master2ip
 echo $master3ip
 
+publicdns="master"
+
+if [ "$vmip" = "$master1ip" ]; then
+        publicdns="master1";
+        echo 1;
+elif [ "$vmip" = "$master2ip" ]; then
+        publicdns="master2";
+        echo 2;
+else publicdns="master3";
+        echo 3;
+fi
+
+echo $publicdns
 
 echo "zk://"$master1ip":2181,"$master2ip":2181,"$master3ip":2181/mesos" > /mnt/zk
 cp /mnt/zk /etc/mesos/
 
 #check hostname
-vmname="$(getent hosts master1 | awk '{ print $2 }')"
+vmname="$(getent hosts "$publicdns" | awk '{ print $2 }')"
+echo $vmname
 
 if [[ $vmname ==  *"master1"* ]]; then
         echo "1" > /mnt/myid;
