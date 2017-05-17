@@ -117,7 +117,7 @@ echo "2" > /etc/mesos-master/quorum
 cp /etc/mesos-master/ip /etc/mesos-master/hostname
 mkdir -p /etc/marathon/conf
 cp /etc/mesos-master/hostname /etc/marathon/conf
-cp /etc/mesos-master/ip /etc/marathon/conf
+#cp /etc/mesos-master/ip /etc/marathon/conf
 cp /etc/mesos/zk /etc/marathon/conf/master
 cp /etc/marathon/conf/master /etc/marathon/conf/zk
 
