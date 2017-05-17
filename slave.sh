@@ -4,7 +4,6 @@
 
 # Update the packages.
 apt-get update
-apt-get -y upgrade
 
 # Install a few utility tools.
 apt-get install -y tar wget git
