@@ -88,10 +88,10 @@ cp /mnt/zk /etc/mesos/
 vmname="$(getent hosts "$publicdns" | awk '{ print $2 }')"
 echo $vmname
 
-if [[ $vmname ==  *"master1"* ]]; then
+if [[ "$vmname" ==  *"master1"* ]]; then
         echo "1" > /mnt/myid;
         echo $master1ip | sudo tee /mnt/ip
-elif [[ $vmname ==  *"master2"* ]]; then
+elif [[ "$vmname" ==  *"master2"* ]]; then
         echo "2" > /mnt/myid;
         echo $master2ip | sudo tee /mnt/ip
 else 	echo "3" > /mnt/myid;
