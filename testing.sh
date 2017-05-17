@@ -85,13 +85,13 @@ echo "zk://"$master1ip":2181,"$master2ip":2181,"$master3ip":2181/mesos" > /mnt/z
 cp /mnt/zk /etc/mesos/
 
 #check hostname
-vmname="$(getent hosts "$publicdns" | awk '{ print $2 }')"
-echo $vmname
+#vmname="$(getent hosts "$publicdns" | awk '{ print $2 }')"
+#echo $vmname
 
-if [[ "$vmname" ==  *"master1"* ]]; then
+if [ "$publicdns" = "master1" ]; then
         echo "1" > /mnt/myid;
         echo $master1ip | sudo tee /mnt/ip
-elif [[ "$vmname" ==  *"master2"* ]]; then
+elif [ "$publicdns" =  "master2" ]; then
         echo "2" > /mnt/myid;
         echo $master2ip | sudo tee /mnt/ip
 else 	echo "3" > /mnt/myid;
