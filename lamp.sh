@@ -2,10 +2,22 @@
 
 # Variables
 DBHOST=localhost
-DBNAME=dbname
-DBUSER=dbuser
-DBPASSWD=test123
-SITE=name
+#DBNAME="dbname"
+#DBUSER="dbuser"
+#DBPASSWD="test123"
+#SITE="name"
+#ROOTDBPASSWD="root"
+
+echo "Database name"
+read DBNAME
+echo "Database user"
+read DBUSER
+echo "Database password"
+read DBPASSWD
+echo "site FQDN"
+read SITE
+echo "MySQL Root password"
+read ROOTDBPASSWD
 
 echo -e "\n--- Updating packages list ---\n"
 apt-get -qq update
@@ -27,9 +39,9 @@ echo "done"
 
 # MySQL setup for development purposes ONLY
 echo -e "\n--- Install MySQL specific packages and settings ---\n"
-debconf-set-selections <<< "mysql-server mysql-server/root_password password $DBPASSWD"
-debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DBPASSWD"
-apt-get -y install mysql-server php5-mysql
+debconf-set-selections <<< "mysql-server mysql-server/root_password password $ROOTDBPASSWD"
+debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $ROOTDBPASSWD"
+apt-get -y install mysql-server php-mysql
 echo "done"
 
 echo -e "\n--- Setting up our MySQL user and db ---\n"
@@ -42,11 +54,7 @@ apt-get -y install apache2
 echo "done"
 
 echo -e "\n--- Installing PHP-specific packages ---\n"
-apt-get -y install php5 libapache2-mod-php5 php5-curl php5-gd php5-mysql memcached php5-memcached php5-mcrypt 
-
-cd /etc/php5/cli/conf.d
-ln -s ../../mods-available/mcrypt.ini 20-mcrypt.ini
-php5enmod mcrypt 
+apt-get -y install php libapache2-mod-php php-curl php-gd php-mysql memcached 
 
 echo -e "\n--- Enabling mod-rewrite ---\n"
 a2enmod rewrite 
@@ -66,23 +74,35 @@ ln -s /var/www/$SITE/public_html/ html
 chown -R www-data:www-data /var/www/
 chmod -R 755 /var/www
 
-echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
-#sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/apache2/php.ini
-#sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/apache2/php.ini
-
 echo -e "\n--- adding vhost files and enabling sites ---\n"
-# /etc/apache2/sites-available/
-#a2ensite $SITE
+
+echo "<VirtualHost *:80>
+
+        ServerAdmin info@$SITE
+        ServerName      $SITE
+        ServerAlias     www.$SITE
+
+        DocumentRoot /var/www/$SITE/public_html/
+        <Directory "/var/www/$SITE/public_html/">
+                Options +FollowSymLinks -Indexes
+                AllowOverride All
+        </Directory>
+        ErrorLog /var/www/$SITE/logs/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/www/$SITE/logs/access.log combined
+
+</VirtualHost>" > /etc/apache2/sites-available/$SITE.conf
+
+
+cd /etc/apache2/sites-available/
+a2ensite $SITE
 
 echo -e "\n--- Restarting Apache ---\n"
 service apache2 restart
-
-echo -e "\n--- Installing Composer for PHP package management ---\n"
-curl --silent https://getcomposer.org/installer | php 
-mv composer.phar /usr/local/bin/composer
-
-echo -e "\n--- Installing javascript components ---\n"
-#npm install -g gulp bower
 
 echo "all done :)"
 exit
