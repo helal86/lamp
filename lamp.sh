@@ -55,6 +55,7 @@ echo "done"
 
 echo -e "\n--- Installing PHP-specific packages ---\n"
 apt-get -y install php libapache2-mod-php php-curl php-gd php-mysql memcached php7.0-mcrypt
+phpenmod mcrypt
 
 echo -e "\n--- Enabling mod-rewrite ---\n"
 a2enmod rewrite 
