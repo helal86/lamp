@@ -21,7 +21,6 @@ read ROOTDBPASSWD
 
 echo -e "\n--- Updating packages list ---\n"
 apt-get -qq update
-apt-get -y upgrade
 
 echo -e "\n--- Install base packages ---\n"
 apt-get -y install curl build-essential python-software-properties git unzip htop
@@ -101,6 +100,7 @@ echo "<VirtualHost *:80>
 
 cd /etc/apache2/sites-available/
 a2ensite $SITE
+a2enmod ssl
 
 echo -e "\n--- Restarting Apache ---\n"
 service apache2 restart
