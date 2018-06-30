@@ -53,7 +53,7 @@ apt-get -y install apache2
 echo "done"
 
 echo -e "\n--- Installing PHP-specific packages ---\n"
-apt-get -y install php libapache2-mod-php php-curl php-gd php-mysql memcached php7.0-mcrypt
+apt-get -y install php libapache2-mod-php php-curl php-gd php-mysql memcached php7.0-mcrypt php-mbstring php-mcrypt php-xml php-xmlrpc
 phpenmod mcrypt
 
 echo -e "\n--- Enabling mod-rewrite ---\n"
