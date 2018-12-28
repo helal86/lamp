@@ -26,11 +26,8 @@ echo -e "\n--- Install base packages ---\n"
 apt-get -y install curl build-essential python-software-properties git unzip htop
 echo "done"
 
-
-echo -e "\n--- Configuring IP address ---\n"
-IPADDR=$(/sbin/ifconfig eth0 | awk '/inet / { print $2 }' | sed 's/addr://')
-        sed -i "s/^${IPADDR}.*//" /etc/hosts
-        echo ${IPADDR} ubuntu.localhost >> /etc/hosts  
+echo "Europe/London" > /etc/timezone
+dpkg-reconfigure -f noninteractive tzdata
 
 echo -e "\n--- Updating packages list ---\n"
 apt-get -qq update
@@ -38,14 +35,14 @@ echo "done"
 
 # MySQL setup for development purposes ONLY
 echo -e "\n--- Install MySQL specific packages and settings ---\n"
-debconf-set-selections <<< "mysql-server mysql-server/root_password password $ROOTDBPASSWD"
-debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $ROOTDBPASSWD"
+echo "mysql-server mysql-server/root_password password $ROOTDBPASSWD" | debconf-set-selections
+echo "mysql-server mysql-server/root_password_again password $ROOTDBPASSWD" | debconf-set-selections
 apt-get -y install mysql-server php-mysql
 echo "done"
 
 echo -e "\n--- Setting up our MySQL user and db ---\n"
-mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME" 
-mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
+mysql -uroot -p$ROOTDBPASSWD -e "CREATE DATABASE $DBNAME" 
+mysql -uroot -p$ROOTDBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
 echo "done"
 
 echo -e "\n--- Install Apache ---\n"
