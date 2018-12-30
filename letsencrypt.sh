@@ -3,16 +3,13 @@
 echo "Site FQDN"
 read FQDN
 
-echo "Site FQDN inc www"
-read WWWFQDN
-
-EMAIL=helal@helal.com
+EMAIL=helal@helalkhan.co.uk
 
 sudo add-apt-repository -y ppa:certbot/certbot
 
 sudo apt-get update && sudo apt-get -y install python-certbot-apache
 
-sudo certbot --apache -n -d $FQDN -d $WWWFQDN -m $EMAIL --agree-tos 
+sudo certbot --apache -n -d $FQDN -d www.$FQDN -m $EMAIL --agree-tos 
 
 sudo certbot renew --dry-run
 
