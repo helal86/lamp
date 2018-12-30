@@ -6,7 +6,7 @@ read USERNAME
 echo "SSH Public Key"
 read SSHPUBKEY
 
-apt-get update && apt-get dist-upgrade
+apt-get update && apt-get -y dist-upgrade
 
 apt-get install -y bash-completion nano fail2ban sshguard unzip curl wget apt-transport-https ca-certificates software-properties-common git htop
 
@@ -30,6 +30,12 @@ echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 #add swap space
 sudo fallocate -l 4G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab && free -h
+
+sudo sysctl vm.swappiness=50
+sudo sysctl vm.vfs_cache_pressure=50
+
+sudo echo "vm.swappiness = 50" >>/etc/sysctl.conf
+sudo echo "vm.vfs_cache_pressure = 50" >>/etc/sysctl.conf
 
 export LC_ALL="en_US.UTF-8"
 
