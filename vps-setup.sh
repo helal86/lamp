@@ -42,5 +42,7 @@ export LC_ALL="en_US.UTF-8"
 echo "restarting ssh"
 service ssh restart
 
+reboot
+
 exit
 
