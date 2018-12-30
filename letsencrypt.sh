@@ -14,6 +14,6 @@ sudo certbot --apache -n -d $FQDN -d www.$FQDN -m $EMAIL --agree-tos
 sudo certbot renew --dry-run
 
 cd /var/www/$FQDN/public_html
-sudo sed -i '7iRewriteCond %{SERVER_PORT} 80\nRewriteRule ^(.*)$ https://'$FQDN'/$1 [R,L]/' .htaccess
+sudo sed -i '7iRewriteCond %{SERVER_PORT} 80\nRewriteRule ^(.*)$ https://'$FQDN'/$1 [R,L]' .htaccess
 
 exit
