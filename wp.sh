@@ -36,7 +36,6 @@ wget https://en-gb.wordpress.org/wordpress-5.0.2-en_GB.zip
 unzip wordpress*
 mv wordpress/* .
 rm -r wordpress*
-sed -i '7iRewriteCond %{SERVER_PORT} 80\nRewriteRule ^(.*)$ https://'$SITE'/$1 [R,L]/' .htaccess
 
 cd /var/www/
 chown -R www-data:www-data /var/www/
