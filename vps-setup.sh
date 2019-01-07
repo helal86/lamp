@@ -6,6 +6,11 @@ read USERNAME
 echo "SSH Public Key"
 read SSHPUBKEY
 
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+
+timedatectl set-timezone UTC
+
 apt-get update && apt-get -y dist-upgrade
 
 apt-get install -y bash-completion nano fail2ban sshguard unzip curl wget apt-transport-https ca-certificates software-properties-common git htop
@@ -36,8 +41,6 @@ sudo sysctl vm.vfs_cache_pressure=50
 
 sudo echo "vm.swappiness = 50" >>/etc/sysctl.conf
 sudo echo "vm.vfs_cache_pressure = 50" >>/etc/sysctl.conf
-
-export LC_ALL="en_US.UTF-8"
 
 echo "restarting ssh"
 service ssh restart
