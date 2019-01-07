@@ -45,6 +45,8 @@ sudo echo "vm.vfs_cache_pressure = 50" >>/etc/sysctl.conf
 echo "restarting ssh"
 service ssh restart
 
+sudo dpkg-reconfigure locales
+
 echo "Reboot"
 
 exit
