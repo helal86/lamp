@@ -13,7 +13,7 @@ timedatectl set-timezone UTC
 
 apt-get update && apt-get -y dist-upgrade
 
-apt-get install -y bash-completion nano fail2ban sshguard unzip curl wget apt-transport-https ca-certificates software-properties-common git htop
+apt-get install -y bash-completion nano fail2ban unzip curl wget apt-transport-https ca-certificates software-properties-common git htop
 
 adduser --disabled-password --gecos "" $USERNAME
 usermod -aG sudo $USERNAME
