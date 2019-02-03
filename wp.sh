@@ -32,7 +32,7 @@ mkdir /var/www/$SITE/logs
 
 echo "Installing WordPress"
 cd /var/www/$SITE/public_html
-wget https://en-gb.wordpress.org/wordpress-5.0.2-en_GB.zip
+wget https://en-gb.wordpress.org/wordpress-5.0.3-en_GB.zip
 unzip wordpress*
 mv wordpress/* .
 rm -r wordpress*
