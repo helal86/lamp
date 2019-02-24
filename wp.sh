@@ -3,7 +3,7 @@
 # Variables
 
 echo "Enter Current MySQL Root password"
-read ROOTDBPASSWD
+read -s ROOTDBPASSWD
 
 echo "Database name"
 read DBNAME
